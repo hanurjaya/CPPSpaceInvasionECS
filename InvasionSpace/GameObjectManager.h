@@ -37,7 +37,6 @@ private:
 	void ProjectilePosUpdate();
 	Uint64 GetElapsedTime();
 	bool checkCollision(const SDL_FRect* a, const SDL_FRect* b);
-	void MovePlayer();
 public:
 	GameObjectManager(GameObjectManager&) = delete;
 	void operator=(const GameObjectManager&) = delete;
@@ -48,12 +47,10 @@ public:
 	void DestroyGameObject(GameObject* gameObject);
 	void DestroyAllGameObject();
 	bool TrySpawnProjectileFromPlayer();
-	Player* GetPlayer();
 	bool IsNeedToRespawnEnemy();
 	void UpEnemySPeed();
 	void DownEnemySPeed();
 	int GetTotalScore();
 	void Update();
-	void SetMovePlayer(bool isActive, bool isMoveLeft);
 };
 

@@ -63,17 +63,14 @@ void RenderingManager::Update()
         {
             SDL_RenderTexture(RenderingManager::GetInstance()->GetRenderer(), gameObject->GetTexture(), gameObject->GetSrcPos(), gameObject->GetDestPos());
         }
-        auto entityView = m_entityList->view<Sprite, Position>();
-        entityView.each([&](Sprite& sprite, Position& pos) {
-            SDL_RenderTexture(RenderingManager::GetInstance()->GetRenderer(), sprite.m_texture, sprite.m_texSize, pos.m_posDetail);
-        });
+        if (EntityRegistryManager::GetInstance()->GetRegistry() != nullptr)
+        {
+            EntityRegistryManager::GetInstance()->GetRegistry()->view<Sprite, Position>().each([](Sprite& sprite, Position& pos) {
+                SDL_RenderTexture(RenderingManager::GetInstance()->GetRenderer(), sprite.m_texture, sprite.m_texSize, pos.m_posDetail);
+                });
+        }
     }
     SDL_RenderPresent(m_renderer);
-}
-
-void RenderingManager::SetEntityList(entt::registry* entityList)
-{
-    m_entityList = entityList;
 }
 
 RenderingManager::~RenderingManager()

@@ -72,28 +72,6 @@ void GameObjectManager::EnemyAIUpdate()
 	}
 }
 
-void GameObjectManager::MovePlayer()
-{
-	if (m_playerObject != nullptr && m_needMovePlayer)
-	{
-		if (m_isPlayerMoveLeft)
-		{
-			if (m_playerObject->GetDestPos()->x > 30.0f)
-			{
-				m_playerObject->GetDestPos()->x -= m_playerSpeed * ((float)(SDL_GetTicksNS() - m_sdlTicks) / 1000000000.0f);
-			}
-		}
-		else
-		{
-			if (m_playerObject->GetDestPos()->x + 60 < (m_width - 30))
-			{
-				m_playerObject->GetDestPos()->x += m_playerSpeed * ((float)(SDL_GetTicksNS() - m_sdlTicks) / 1000000000.0f);
-			}
-		}
-	}
-	m_needMovePlayer = false;
-}
-
 void GameObjectManager::DestroyGameObject(GameObject* gameObject)
 {
 	int index = 0;
@@ -140,11 +118,6 @@ bool GameObjectManager::TrySpawnProjectileFromPlayer()
 		return true;
 	}
 	return false;
-}
-
-Player* GameObjectManager::GetPlayer()
-{
-	return m_playerObject;
 }
 
 bool GameObjectManager::IsNeedToRespawnEnemy()
@@ -255,21 +228,11 @@ void GameObjectManager::Update()
 		m_isEnemyMoveLeft = true;
 		m_enemyNeedMoveDown = false;
 	}
-	MovePlayer();
 	GetEnemyDirection();
 	EnemyAIUpdate();
 	ProjectilePosUpdate();
 	CollisionUpdate();
 	m_sdlTicks = SDL_GetTicksNS();
-}
-
-void GameObjectManager::SetMovePlayer(bool isActive, bool isMoveLeft)
-{
-	if (m_needMovePlayer != isActive)
-	{
-		m_needMovePlayer = isActive;
-		m_isPlayerMoveLeft = isMoveLeft;
-	}
 }
 
 void GameObjectManager::CollisionUpdate()

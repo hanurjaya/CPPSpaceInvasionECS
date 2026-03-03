@@ -8,13 +8,12 @@
 #include "RenderingManager.h"
 #include "Sprite.h"
 #include "Position.h"
+#include "EntityRegistryManager.h"
 #define _CRTDBG_MAP_ALLOC //to get more details
 #include <stdlib.h>  
 #include <crtdbg.h>   //for malloc and free
 #include "windows.h"
-#include <entt.hpp>
 
-entt::registry m_registry;
 
 void SpawnAllObjects(bool onlyEnemy, entt::entity playerEntity, entt::entity enemyEntity)
 {
@@ -23,11 +22,8 @@ void SpawnAllObjects(bool onlyEnemy, entt::entity playerEntity, entt::entity ene
         //Player
         float playerWidth = 60.0f;
         float playerHeight = 30.0f;
-        m_registry.emplace<Sprite>(playerEntity, RenderingManager::GetInstance()->LoadTexture("player.png"), new SDL_FRect{ 0, 0, playerWidth, playerHeight });
-        m_registry.emplace<Position>(playerEntity, new SDL_FRect{ (m_width / 2) - (playerWidth / 2), m_height - playerHeight, playerWidth, playerHeight });
-
-        RenderingManager::GetInstance()->SetEntityList(&m_registry);
-        //GameObjectManager::GetInstance()->AddGameObject(new Player(new SDL_FRect{ 0, 0, 60, 30 }, m_width, m_height, RenderingManager::GetInstance()->LoadTexture("player.png")));
+        EntityRegistryManager::GetInstance()->GetRegistry()->emplace<Sprite>(playerEntity, RenderingManager::GetInstance()->LoadTexture("player.png"), new SDL_FRect{ 0, 0, playerWidth, playerHeight });
+        EntityRegistryManager::GetInstance()->GetRegistry()->emplace<Position>(playerEntity, new SDL_FRect{ (m_width / 2) - (playerWidth / 2), m_height - playerHeight, playerWidth, playerHeight });
     }
     //enemy
     float enemyAssetWidth{ 40 };
@@ -65,9 +61,10 @@ int main(int argc, char* argv[])
     _CrtMemCheckpoint(&sOld); //take a snapshot
 
     //Create Entity
-    const auto playerEntity = m_registry.create();
-    const auto enemyEntity = m_registry.create();
-    const auto projectileEntity = m_registry.create();
+    EntityRegistryManager::GetInstance()->CreateNewEntity();
+    const auto playerEntity = EntityRegistryManager::GetInstance()->CreateNewEntity();
+    const auto enemyEntity = EntityRegistryManager::GetInstance()->CreateNewEntity();
+    const auto projectileEntity = EntityRegistryManager::GetInstance()->CreateNewEntity();
 
     if (!RenderingManager::GetInstance()->TryInit(m_width, m_height))
     {
@@ -96,12 +93,13 @@ int main(int argc, char* argv[])
     UIManager::GetInstance()->AddText("endResultText", endResultText, UIManager::CenterTextXPos(strlen(endResultText), m_width), (float)(m_height / 6) + (4 * SDL_DEBUG_TEXT_FONT_CHARACTER_SIZE), GameStateManager::GameOver);
 
     GameObjectManager::GetInstance()->SetRenderer(RenderingManager::GetInstance()->GetRenderer());
+    InputManager::GetInstance()->SetPlayerEntity(playerEntity);
     
     while (GameStateManager::GetInstance()->GetGameState() != GameStateManager::Exit)
     {
         InputManager::GetInstance()->Update();
-        Sprite* playerSprite = m_registry.try_get<Sprite>(playerEntity);
-        if (GameStateManager::GetInstance()->GetGameState() == GameStateManager::InGame && playerSprite == nullptr)
+        Sprite* playerSprite = EntityRegistryManager::GetInstance()->GetRegistry()->try_get<Sprite>(playerEntity);
+        if (GameStateManager::GetInstance()->GetGameState() == GameStateManager::InGame && !EntityRegistryManager::GetInstance()->GetRegistry()->any_of<Position>(playerEntity)/*playerSprite == nullptr*/)
         {
             GameObjectManager::GetInstance()->DestroyAllGameObject();
             SpawnAllObjects(false, playerEntity, enemyEntity);
@@ -138,6 +136,9 @@ int main(int argc, char* argv[])
     delete GameObjectManager::GetInstance();
     delete GameStateManager::GetInstance();
     delete RenderingManager::GetInstance();
+    delete EntityRegistryManager::GetInstance();
+    //m_registry.destroy(enemyEntity);
+    //m_registry.destroy(projectileEntity);
     
     //For Memory Leak Checker
     _CrtMemCheckpoint(&sNew); //take a snapshot 

@@ -46,23 +46,37 @@ void InputManager::Update()
 	}
 	else if (GameStateManager::GetInstance()->GetGameState() == GameStateManager::InGame)
 	{
-		if (GameObjectManager::GetInstance()->GetPlayer() == nullptr)
+		if (!EntityRegistryManager::GetInstance()->GetRegistry()->any_of<Position>(m_playerEntity))
 		{
-			//GameStateManager::GetInstance()->SetGameState(GameStateManager::GameOver);
+			GameStateManager::GetInstance()->SetGameState(GameStateManager::GameOver);
 		}
 		if (keyboardState[SDL_SCANCODE_W])
 		{
 		}
 		if (keyboardState[SDL_SCANCODE_A])
 		{
-			GameObjectManager::GetInstance()->SetMovePlayer(true, true);
+			if (EntityRegistryManager::GetInstance()->GetRegistry()->any_of<Position>(m_playerEntity))
+			{
+				Position* playerPos = &EntityRegistryManager::GetInstance()->GetRegistry()->get<Position>(m_playerEntity);
+				if (playerPos->m_posDetail->x > 30.0f)
+				{
+					playerPos->m_posDetail->x -= m_playerSpeed * ((float)(SDL_GetTicksNS() - m_sdlTicks) / 1000000000.0f);
+				}
+			}
 		}
 		if (keyboardState[SDL_SCANCODE_S])
 		{
 		}
 		if (keyboardState[SDL_SCANCODE_D])
 		{
-			GameObjectManager::GetInstance()->SetMovePlayer(true, false);
+			if (EntityRegistryManager::GetInstance()->GetRegistry()->any_of<Position>(m_playerEntity))
+			{
+				Position* playerPos = &EntityRegistryManager::GetInstance()->GetRegistry()->get<Position>(m_playerEntity);
+				if (playerPos->m_posDetail->x + 60 < (m_width - 30))
+				{
+					playerPos->m_posDetail->x += m_playerSpeed * ((float)(SDL_GetTicksNS() - m_sdlTicks) / 1000000000.0f);
+				}
+			}
 		}
 		if (keyboardState[SDL_SCANCODE_SPACE])
 		{
@@ -88,4 +102,10 @@ void InputManager::Update()
 			GameStateManager::GetInstance()->SetGameState(GameStateManager::Exit);
 		}
 	}
+	m_sdlTicks = SDL_GetTicksNS();
+}
+
+void InputManager::SetPlayerEntity(entt::entity playerEntity)
+{
+	m_playerEntity = playerEntity;
 }
