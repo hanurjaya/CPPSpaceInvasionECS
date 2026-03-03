@@ -88,7 +88,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)\InvasionSpace\SDL3_image-3.2.4\include;$(SolutionDir)\InvasionSpace\SDL3-3.2.20\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\InvasionSpace\Entt\;$(SolutionDir)\InvasionSpace\SDL3_image-3.2.4\include;$(SolutionDir)\InvasionSpace\SDL3-3.2.20\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -111,7 +111,7 @@ xcopy /y /d  "$(ProjectDir)*.png" "$(SolutionDir)$(PlatformName)\$(Configuration
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)\InvasionSpace\SDL3_image-3.2.4\include;$(SolutionDir)\InvasionSpace\SDL3-3.2.20\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\InvasionSpace\Entt\;$(SolutionDir)\InvasionSpace\SDL3_image-3.2.4\include;$(SolutionDir)\InvasionSpace\SDL3-3.2.20\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -134,7 +134,7 @@ xcopy /y /d  "$(ProjectDir)*.png" "$(SolutionDir)$(PlatformName)\$(Configuration
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)\InvasionSpace\SDL3_image-3.2.4\include;$(SolutionDir)\InvasionSpace\SDL3-3.2.20\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\InvasionSpace\Entt\;$(SolutionDir)\InvasionSpace\SDL3_image-3.2.4\include;$(SolutionDir)\InvasionSpace\SDL3-3.2.20\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -157,7 +157,7 @@ xcopy /y /d  "$(ProjectDir)*.png" "$(SolutionDir)$(PlatformName)\$(Configuration
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)\InvasionSpace\SDL3_image-3.2.4\include;$(SolutionDir)\InvasionSpace\SDL3-3.2.20\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\InvasionSpace\Entt\;$(SolutionDir)\InvasionSpace\SDL3_image-3.2.4\include;$(SolutionDir)\InvasionSpace\SDL3-3.2.20\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -182,9 +182,11 @@ xcopy /y /d  "$(ProjectDir)*.png" "$(SolutionDir)$(PlatformName)\$(Configuration
     <ClCompile Include="GameStateManager.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Position.cpp" />
     <ClCompile Include="Projectile.cpp" />
     <ClCompile Include="RenderingManager.cpp" />
     <ClCompile Include="InvasionSpace.cpp" />
+    <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="UIManager.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -195,9 +197,11 @@ xcopy /y /d  "$(ProjectDir)*.png" "$(SolutionDir)$(PlatformName)\$(Configuration
     <ClInclude Include="GameStateManager.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="Position.h" />
     <ClInclude Include="Projectile.h" />
     <ClInclude Include="RenderingManager.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="Sprite.h" />
     <ClInclude Include="UIManager.h" />
   </ItemGroup>
   <ItemGroup>

@@ -6,17 +6,28 @@
 #include "GameObjectManager.h"
 #include "InputManager.h"
 #include "RenderingManager.h"
+#include "Sprite.h"
+#include "Position.h"
 #define _CRTDBG_MAP_ALLOC //to get more details
 #include <stdlib.h>  
 #include <crtdbg.h>   //for malloc and free
 #include "windows.h"
+#include <entt.hpp>
 
-void SpawnAllObjects(bool onlyEnemy)
+entt::registry m_registry;
+
+void SpawnAllObjects(bool onlyEnemy, entt::entity playerEntity, entt::entity enemyEntity)
 {
     if (!onlyEnemy)
     {
         //Player
-        GameObjectManager::GetInstance()->AddGameObject(new Player(new SDL_FRect{ 0, 0, 60, 30 }, m_width, m_height, RenderingManager::GetInstance()->LoadTexture("player.png")));
+        float playerWidth = 60.0f;
+        float playerHeight = 30.0f;
+        m_registry.emplace<Sprite>(playerEntity, RenderingManager::GetInstance()->LoadTexture("player.png"), new SDL_FRect{ 0, 0, playerWidth, playerHeight });
+        m_registry.emplace<Position>(playerEntity, new SDL_FRect{ (m_width / 2) - (playerWidth / 2), m_height - playerHeight, playerWidth, playerHeight });
+
+        RenderingManager::GetInstance()->SetEntityList(&m_registry);
+        //GameObjectManager::GetInstance()->AddGameObject(new Player(new SDL_FRect{ 0, 0, 60, 30 }, m_width, m_height, RenderingManager::GetInstance()->LoadTexture("player.png")));
     }
     //enemy
     float enemyAssetWidth{ 40 };
@@ -53,6 +64,11 @@ int main(int argc, char* argv[])
     _CrtMemState sDiff;
     _CrtMemCheckpoint(&sOld); //take a snapshot
 
+    //Create Entity
+    const auto playerEntity = m_registry.create();
+    const auto enemyEntity = m_registry.create();
+    const auto projectileEntity = m_registry.create();
+
     if (!RenderingManager::GetInstance()->TryInit(m_width, m_height))
     {
         GameStateManager::GetInstance()->SetGameState(GameStateManager::Exit);
@@ -84,14 +100,15 @@ int main(int argc, char* argv[])
     while (GameStateManager::GetInstance()->GetGameState() != GameStateManager::Exit)
     {
         InputManager::GetInstance()->Update();
-        if (GameStateManager::GetInstance()->GetGameState() == GameStateManager::InGame && GameObjectManager::GetInstance()->GetPlayer() == nullptr)
+        Sprite* playerSprite = m_registry.try_get<Sprite>(playerEntity);
+        if (GameStateManager::GetInstance()->GetGameState() == GameStateManager::InGame && playerSprite == nullptr)
         {
             GameObjectManager::GetInstance()->DestroyAllGameObject();
-            SpawnAllObjects(false);
+            SpawnAllObjects(false, playerEntity, enemyEntity);
         }
         else if (GameStateManager::GetInstance()->GetGameState() == GameStateManager::InGame && GameObjectManager::GetInstance()->IsNeedToRespawnEnemy())
         {
-            SpawnAllObjects(true);
+            SpawnAllObjects(true, playerEntity, enemyEntity);
         } 
         //Update Score
         std::string tempFinalScoreText{ score };

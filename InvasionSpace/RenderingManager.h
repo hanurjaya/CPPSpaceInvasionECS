@@ -6,12 +6,16 @@
 #include "GameStateManager.h"
 #include "GameObjectManager.h"
 #include "UIManager.h"
+#include "Sprite.h"
+#include "Position.h"
+#include <entt.hpp>
 class RenderingManager
 {
 private:
 	SDL_Window* m_window{};
 	SDL_Renderer* m_renderer{};
 	static RenderingManager* m_RenderingManagerInstance;
+	entt::registry* m_entityList;
 	RenderingManager();
 public:
 	RenderingManager(RenderingManager&) = delete;
@@ -21,6 +25,7 @@ public:
 	SDL_Renderer* GetRenderer();
 	SDL_Texture* LoadTexture(const char* texturePath);
 	void Update();
+	void SetEntityList(entt::registry* entityList);
 	~RenderingManager();
 };
 

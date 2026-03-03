@@ -48,7 +48,7 @@ void InputManager::Update()
 	{
 		if (GameObjectManager::GetInstance()->GetPlayer() == nullptr)
 		{
-			GameStateManager::GetInstance()->SetGameState(GameStateManager::GameOver);
+			//GameStateManager::GetInstance()->SetGameState(GameStateManager::GameOver);
 		}
 		if (keyboardState[SDL_SCANCODE_W])
 		{
