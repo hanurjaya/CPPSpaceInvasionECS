@@ -5,6 +5,7 @@
 #include "Constant.h"
 #include "EntityRegistryManager.h"
 #include "Position.h"
+#include "EnemyMovementManager.h"
 
 class InputManager
 {

@@ -84,11 +84,11 @@ void InputManager::Update()
 		}
 		if (keyboardState[SDL_SCANCODE_F])
 		{
-			GameObjectManager::GetInstance()->UpEnemySPeed();
+			EnemyMovementManager::GetInstance()->UpEnemySpeed();
 		}
 		if (keyboardState[SDL_SCANCODE_V])
 		{
-			GameObjectManager::GetInstance()->DownEnemySPeed();
+			EnemyMovementManager::GetInstance()->DownEnemySpeed();
 		}
 	}
 	else if (GameStateManager::GetInstance()->GetGameState() == GameStateManager::GameOver)

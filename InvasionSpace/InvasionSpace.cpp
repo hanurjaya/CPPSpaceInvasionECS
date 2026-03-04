@@ -8,14 +8,16 @@
 #include "RenderingManager.h"
 #include "Sprite.h"
 #include "Position.h"
+#include "GameplayInfo.h"
 #include "EntityRegistryManager.h"
+#include "EnemyMovementManager.h"
 #define _CRTDBG_MAP_ALLOC //to get more details
 #include <stdlib.h>  
 #include <crtdbg.h>   //for malloc and free
 #include "windows.h"
 
 
-void SpawnAllObjects(bool onlyEnemy, entt::entity playerEntity, entt::entity enemyEntity)
+void SpawnAllObjects(bool onlyEnemy, entt::entity playerEntity)
 {
     if (!onlyEnemy)
     {
@@ -24,6 +26,7 @@ void SpawnAllObjects(bool onlyEnemy, entt::entity playerEntity, entt::entity ene
         float playerHeight = 30.0f;
         EntityRegistryManager::GetInstance()->GetRegistry()->emplace<Sprite>(playerEntity, RenderingManager::GetInstance()->LoadTexture("player.png"), new SDL_FRect{ 0, 0, playerWidth, playerHeight });
         EntityRegistryManager::GetInstance()->GetRegistry()->emplace<Position>(playerEntity, new SDL_FRect{ (m_width / 2) - (playerWidth / 2), m_height - playerHeight, playerWidth, playerHeight });
+        EntityRegistryManager::GetInstance()->GetRegistry()->emplace<GameplayInfo>(playerEntity, 0, true);
     }
     //enemy
     float enemyAssetWidth{ 40 };
@@ -49,7 +52,10 @@ void SpawnAllObjects(bool onlyEnemy, entt::entity playerEntity, entt::entity ene
             temp = "yellow.png";
         }
         SDL_FRect* enemyDestPost{ new SDL_FRect{ (240 + ((m_width / 2) - (enemyAssetWidth / 2)) - ((enemyAssetWidth + 20) * (i % 8))), yPos, enemyAssetWidth, enemyAssetHeight } };
-        GameObjectManager::GetInstance()->AddGameObject(new Enemy(new SDL_FRect{ 0, 0, enemyAssetWidth, enemyAssetHeight }, enemyDestPost, RenderingManager::GetInstance()->LoadTexture(temp), scoreWight));
+        entt::entity enemyEntity = EntityRegistryManager::GetInstance()->CreateNewEntity();
+        EntityRegistryManager::GetInstance()->GetRegistry()->emplace<Sprite>(enemyEntity, RenderingManager::GetInstance()->LoadTexture(temp), new SDL_FRect{0, 0, enemyAssetWidth, enemyAssetHeight});
+        EntityRegistryManager::GetInstance()->GetRegistry()->emplace<Position>(enemyEntity, enemyDestPost);
+        EntityRegistryManager::GetInstance()->GetRegistry()->emplace<GameplayInfo>(enemyEntity, scoreWight, true);
     }
 }
 int main(int argc, char* argv[])
@@ -63,7 +69,6 @@ int main(int argc, char* argv[])
     //Create Entity
     EntityRegistryManager::GetInstance()->CreateNewEntity();
     const auto playerEntity = EntityRegistryManager::GetInstance()->CreateNewEntity();
-    const auto enemyEntity = EntityRegistryManager::GetInstance()->CreateNewEntity();
     const auto projectileEntity = EntityRegistryManager::GetInstance()->CreateNewEntity();
 
     if (!RenderingManager::GetInstance()->TryInit(m_width, m_height))
@@ -102,11 +107,11 @@ int main(int argc, char* argv[])
         if (GameStateManager::GetInstance()->GetGameState() == GameStateManager::InGame && !EntityRegistryManager::GetInstance()->GetRegistry()->any_of<Position>(playerEntity)/*playerSprite == nullptr*/)
         {
             GameObjectManager::GetInstance()->DestroyAllGameObject();
-            SpawnAllObjects(false, playerEntity, enemyEntity);
+            SpawnAllObjects(false, playerEntity);
         }
-        else if (GameStateManager::GetInstance()->GetGameState() == GameStateManager::InGame && GameObjectManager::GetInstance()->IsNeedToRespawnEnemy())
+        else if (GameStateManager::GetInstance()->GetGameState() == GameStateManager::InGame && EnemyMovementManager::GetInstance()->IsNeedToRespawnEnemy())
         {
-            SpawnAllObjects(true, playerEntity, enemyEntity);
+            SpawnAllObjects(true, playerEntity);
         } 
         //Update Score
         std::string tempFinalScoreText{ score };
@@ -127,6 +132,7 @@ int main(int argc, char* argv[])
         RenderingManager::GetInstance()->Update();
         if (GameStateManager::GetInstance()->GetGameState() == GameStateManager::InGame)
         {
+            EnemyMovementManager::GetInstance()->Update();
             GameObjectManager::GetInstance()->Update();
         }
     }
@@ -137,8 +143,6 @@ int main(int argc, char* argv[])
     delete GameStateManager::GetInstance();
     delete RenderingManager::GetInstance();
     delete EntityRegistryManager::GetInstance();
-    //m_registry.destroy(enemyEntity);
-    //m_registry.destroy(projectileEntity);
     
     //For Memory Leak Checker
     _CrtMemCheckpoint(&sNew); //take a snapshot 

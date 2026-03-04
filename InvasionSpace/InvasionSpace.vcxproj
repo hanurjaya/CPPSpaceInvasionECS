@@ -177,9 +177,11 @@ xcopy /y /d  "$(ProjectDir)*.png" "$(SolutionDir)$(PlatformName)\$(Configuration
   <ItemGroup>
     <ClCompile Include="Constant.cpp" />
     <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="EnemyMovementManager.cpp" />
     <ClCompile Include="EntityRegistryManager.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameObjectManager.cpp" />
+    <ClCompile Include="GameplayInfo.cpp" />
     <ClCompile Include="GameStateManager.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="Player.cpp" />
@@ -193,9 +195,11 @@ xcopy /y /d  "$(ProjectDir)*.png" "$(SolutionDir)$(PlatformName)\$(Configuration
   <ItemGroup>
     <ClInclude Include="Constant.h" />
     <ClInclude Include="Enemy.h" />
+    <ClInclude Include="EnemyMovementManager.h" />
     <ClInclude Include="EntityRegistryManager.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameObjectManager.h" />
+    <ClInclude Include="GameplayInfo.h" />
     <ClInclude Include="GameStateManager.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="Player.h" />
