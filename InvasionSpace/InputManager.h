@@ -1,7 +1,6 @@
 #pragma once
 #include <SDL3/SDL.h>
 #include "GameStateManager.h"
-#include "GameObjectManager.h"
 #include "Constant.h"
 #include "EntityRegistryManager.h"
 #include "Position.h"

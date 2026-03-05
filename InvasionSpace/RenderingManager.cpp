@@ -59,10 +59,6 @@ void RenderingManager::Update()
     if (GameStateManager::GetInstance()->GetGameState() == GameStateManager::InGame)
     {
         SDL_SetRenderScale(m_renderer, 1.0f, 1.0f);
-        for (const auto gameObject : GameObjectManager::GetInstance()->GetGameObjects())
-        {
-            SDL_RenderTexture(RenderingManager::GetInstance()->GetRenderer(), gameObject->GetTexture(), gameObject->GetSrcPos(), gameObject->GetDestPos());
-        }
         if (EntityRegistryManager::GetInstance()->GetRegistry() != nullptr)
         {
             EntityRegistryManager::GetInstance()->GetRegistry()->view<Sprite, Position>().each([](Sprite& sprite, Position& pos) {

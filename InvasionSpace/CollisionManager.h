@@ -9,6 +9,8 @@ class CollisionManager
 private:
 	static CollisionManager* m_collisionManagerInstance;
 	entt::entity m_playerEntity;
+	entt::entity m_projectileEntity;
+	int m_totalScore{ 0 };
 	CollisionManager();
 	bool CheckCollision(const SDL_FRect* a, const SDL_FRect* b);
 	void DestroyInactiveObject();
@@ -18,5 +20,7 @@ public:
 	static CollisionManager* GetInstance();
 	void Update();
 	void SetPlayerEntity(entt::entity playerEntity);
+	void SetProjectileEntity(entt::entity m_projectileEntity);
+	int GetTotalScore();
 };
 

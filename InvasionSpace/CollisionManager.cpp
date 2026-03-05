@@ -76,13 +76,24 @@ void CollisionManager::Update()
 		GameplayInfo& playerInfo = EntityRegistryManager::GetInstance()->GetRegistry()->get<GameplayInfo>(m_playerEntity);
 		Position& playerPos = EntityRegistryManager::GetInstance()->GetRegistry()->get<Position>(m_playerEntity);
 
-		//code to check collision
+		//code to check collision between player and enemy
 		EntityRegistryManager::GetInstance()->GetRegistry()->view<Position, GameplayInfo>().each([&](auto entity, Position& pos, GameplayInfo& gameplayInfo) {
-			if (entity != m_playerEntity)
+			if (entity != m_playerEntity && entity != m_projectileEntity)
 			{
 				if (playerInfo.m_isActive && gameplayInfo.m_isActive && CheckCollision(playerPos.m_posDetail, pos.m_posDetail))
 				{
 					playerInfo.m_isActive = false;
+				}
+				if (!EntityRegistryManager::GetInstance()->GetRegistry()->orphan(m_projectileEntity))
+				{
+					auto projectile = EntityRegistryManager::GetInstance()->GetRegistry()->get<GameplayInfo, Position>(m_projectileEntity);
+					if (projectile._Myfirst._Val.m_isActive && gameplayInfo.m_isActive && CheckCollision(projectile._Get_rest()._Myfirst._Val.m_posDetail, pos.m_posDetail))
+					{
+						m_totalScore += gameplayInfo.m_scoreWeight;
+						projectile._Myfirst._Val.m_isActive = false;
+						gameplayInfo.m_isActive = false;
+						playerInfo.m_isPlayerShot = false;
+					}
 				}
 			}
 			});
@@ -95,4 +106,14 @@ void CollisionManager::Update()
 			EntityRegistryManager::GetInstance()->GetRegistry()->remove<Sprite, Position, GameplayInfo>(entity);
 		}
 	}
+}
+
+void CollisionManager::SetProjectileEntity(entt::entity projectileEntity)
+{
+	m_projectileEntity = projectileEntity;
+}
+
+int CollisionManager::GetTotalScore()
+{
+	return m_totalScore;
 }

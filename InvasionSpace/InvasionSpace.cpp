@@ -1,9 +1,6 @@
 
 #include <vector>
-#include "Player.h"
-#include "Enemy.h"
 #include "UIManager.h"
-#include "GameObjectManager.h"
 #include "InputManager.h"
 #include "RenderingManager.h"
 #include "Sprite.h"
@@ -98,16 +95,16 @@ int main(int argc, char* argv[])
     UIManager::GetInstance()->AddText("EndScore", score, UIManager::CenterTextXPos(strlen(score), m_width), (float)(m_height / 6) + (2 * SDL_DEBUG_TEXT_FONT_CHARACTER_SIZE), GameStateManager::GameOver);
     UIManager::GetInstance()->AddText("endResultText", endResultText, UIManager::CenterTextXPos(strlen(endResultText), m_width), (float)(m_height / 6) + (4 * SDL_DEBUG_TEXT_FONT_CHARACTER_SIZE), GameStateManager::GameOver);
 
-    GameObjectManager::GetInstance()->SetRenderer(RenderingManager::GetInstance()->GetRenderer());
     CollisionManager::GetInstance()->SetPlayerEntity(playerEntity);
+    CollisionManager::GetInstance()->SetProjectileEntity(projectileEntity);
     InputManager::GetInstance()->SetPlayerEntity(playerEntity);
+    InputManager::GetInstance()->SetProjectileEntity(projectileEntity);
     
     while (GameStateManager::GetInstance()->GetGameState() != GameStateManager::Exit)
     {
         InputManager::GetInstance()->Update();
         if (GameStateManager::GetInstance()->GetGameState() == GameStateManager::InGame && EntityRegistryManager::GetInstance()->GetRegistry()->orphan(playerEntity))
         {
-            GameObjectManager::GetInstance()->DestroyAllGameObject();
             SpawnAllObjects(false, playerEntity);
         }
         else if (GameStateManager::GetInstance()->GetGameState() == GameStateManager::InGame && EnemyMovementManager::GetInstance()->IsNeedToRespawnEnemy())
@@ -116,7 +113,7 @@ int main(int argc, char* argv[])
         } 
         //Update Score
         std::string tempFinalScoreText{ score };
-        tempFinalScoreText += std::to_string(GameObjectManager::GetInstance()->GetTotalScore());
+        tempFinalScoreText += std::to_string(CollisionManager::GetInstance()->GetTotalScore());
         UIManager::GetInstance()->UpdateText("score", 
             tempFinalScoreText.c_str(),
             0.0f,
@@ -135,13 +132,10 @@ int main(int argc, char* argv[])
         {
             EnemyMovementManager::GetInstance()->Update();
             CollisionManager::GetInstance()->Update();
-            GameObjectManager::GetInstance()->Update();
         }
     }
-    GameObjectManager::GetInstance()->DestroyAllGameObject();
     delete UIManager::GetInstance();
     delete InputManager::GetInstance();
-    delete GameObjectManager::GetInstance();
     delete GameStateManager::GetInstance();
     delete RenderingManager::GetInstance();
     delete CollisionManager::GetInstance();

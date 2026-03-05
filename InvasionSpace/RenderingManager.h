@@ -4,7 +4,6 @@
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_render.h>
 #include "GameStateManager.h"
-#include "GameObjectManager.h"
 #include "UIManager.h"
 #include "Sprite.h"
 #include "Position.h"

@@ -23,18 +23,21 @@ const bool* InputManager::GetKeyboardState()
 
 bool InputManager::TryShotProjectile()
 {
-	auto playerInfo = EntityRegistryManager::GetInstance()->GetRegistry()->get<GameplayInfo, Position>(m_playerEntity);
-	if (!EntityRegistryManager::GetInstance()->GetRegistry()->orphan(m_playerEntity) && !playerInfo._Myfirst._Val.m_isPlayerShot)
+	if (!EntityRegistryManager::GetInstance()->GetRegistry()->orphan(m_playerEntity))
 	{
-		float x = playerInfo._Get_rest()._Myfirst._Val.m_posDetail->x + (playerInfo._Get_rest()._Myfirst._Val.m_posDetail->w / 2) - ((8 / 2) / 2);
-		float y = playerInfo._Get_rest()._Myfirst._Val.m_posDetail->y - (30 / 2);
+		auto playerInfo = EntityRegistryManager::GetInstance()->GetRegistry()->get<GameplayInfo, Position>(m_playerEntity);
+		if (!playerInfo._Myfirst._Val.m_isPlayerShot)
+		{
+			float x = playerInfo._Get_rest()._Myfirst._Val.m_posDetail->x + (playerInfo._Get_rest()._Myfirst._Val.m_posDetail->w / 2) - ((8 / 2) / 2);
+			float y = playerInfo._Get_rest()._Myfirst._Val.m_posDetail->y - (30 / 2);
 
-		EntityRegistryManager::GetInstance()->GetRegistry()->emplace<Sprite>(m_projectileEntity, RenderingManager::GetInstance()->LoadTexture("projectile.png"), new SDL_FRect{ 0, 0, 8, 30 });
-		EntityRegistryManager::GetInstance()->GetRegistry()->emplace<Position>(m_projectileEntity, new SDL_FRect{ x, y, 8 / 2, 30 / 2 });
-		EntityRegistryManager::GetInstance()->GetRegistry()->emplace<GameplayInfo>(m_projectileEntity, 0, true);
+			EntityRegistryManager::GetInstance()->GetRegistry()->emplace<Sprite>(m_projectileEntity, RenderingManager::GetInstance()->LoadTexture("projectile.png"), new SDL_FRect{ 0, 0, 8, 30 });
+			EntityRegistryManager::GetInstance()->GetRegistry()->emplace<Position>(m_projectileEntity, new SDL_FRect{ x, y, 8 / 2, 30 / 2 });
+			EntityRegistryManager::GetInstance()->GetRegistry()->emplace<GameplayInfo>(m_projectileEntity, 0, true);
 
-		playerInfo._Myfirst._Val.m_isPlayerShot = true;
-		return true;
+			playerInfo._Myfirst._Val.m_isPlayerShot = true;
+			return true;
+		}
 	}
 	return false;
 }
@@ -150,5 +153,5 @@ void InputManager::SetPlayerEntity(entt::entity playerEntity)
 
 void InputManager::SetProjectileEntity(entt::entity projectileEntity)
 {
-	m_playerEntity = m_projectileEntity;
+	m_projectileEntity = projectileEntity;
 }
