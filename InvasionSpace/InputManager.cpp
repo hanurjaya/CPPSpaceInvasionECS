@@ -46,7 +46,7 @@ void InputManager::Update()
 	}
 	else if (GameStateManager::GetInstance()->GetGameState() == GameStateManager::InGame)
 	{
-		if (!EntityRegistryManager::GetInstance()->GetRegistry()->any_of<Position>(m_playerEntity))
+		if (EntityRegistryManager::GetInstance()->GetRegistry()->orphan(m_playerEntity))
 		{
 			GameStateManager::GetInstance()->SetGameState(GameStateManager::GameOver);
 		}
@@ -96,6 +96,7 @@ void InputManager::Update()
 		if (keyboardState[SDL_SCANCODE_Y])
 		{
 			GameStateManager::GetInstance()->SetGameState(GameStateManager::InGame);
+			EntityRegistryManager::GetInstance()->GetRegistry()->clear<Sprite, Position, GameplayInfo>();
 		}
 		if (keyboardState[SDL_SCANCODE_N])
 		{

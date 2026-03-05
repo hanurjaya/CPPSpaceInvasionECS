@@ -175,6 +175,7 @@ xcopy /y /d  "$(ProjectDir)*.png" "$(SolutionDir)$(PlatformName)\$(Configuration
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CollisionManager.cpp" />
     <ClCompile Include="Constant.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="EnemyMovementManager.cpp" />
@@ -193,6 +194,7 @@ xcopy /y /d  "$(ProjectDir)*.png" "$(SolutionDir)$(PlatformName)\$(Configuration
     <ClCompile Include="UIManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CollisionManager.h" />
     <ClInclude Include="Constant.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemyMovementManager.h" />

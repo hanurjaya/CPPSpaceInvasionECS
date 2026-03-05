@@ -90,7 +90,7 @@ bool EnemyMovementManager::IsNeedToRespawnEnemy()
 
 void EnemyMovementManager::UpEnemySpeed()
 {
-	if (m_enemySPeed > 200.0f)
+	if (m_enemySPeed > 40.0f)
 	{
 		m_enemySPeed -= 1.0f;
 	}

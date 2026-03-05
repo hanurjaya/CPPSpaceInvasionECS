@@ -11,6 +11,7 @@
 #include "GameplayInfo.h"
 #include "EntityRegistryManager.h"
 #include "EnemyMovementManager.h"
+#include "CollisionManager.h"
 #define _CRTDBG_MAP_ALLOC //to get more details
 #include <stdlib.h>  
 #include <crtdbg.h>   //for malloc and free
@@ -98,13 +99,13 @@ int main(int argc, char* argv[])
     UIManager::GetInstance()->AddText("endResultText", endResultText, UIManager::CenterTextXPos(strlen(endResultText), m_width), (float)(m_height / 6) + (4 * SDL_DEBUG_TEXT_FONT_CHARACTER_SIZE), GameStateManager::GameOver);
 
     GameObjectManager::GetInstance()->SetRenderer(RenderingManager::GetInstance()->GetRenderer());
+    CollisionManager::GetInstance()->SetPlayerEntity(playerEntity);
     InputManager::GetInstance()->SetPlayerEntity(playerEntity);
     
     while (GameStateManager::GetInstance()->GetGameState() != GameStateManager::Exit)
     {
         InputManager::GetInstance()->Update();
-        Sprite* playerSprite = EntityRegistryManager::GetInstance()->GetRegistry()->try_get<Sprite>(playerEntity);
-        if (GameStateManager::GetInstance()->GetGameState() == GameStateManager::InGame && !EntityRegistryManager::GetInstance()->GetRegistry()->any_of<Position>(playerEntity)/*playerSprite == nullptr*/)
+        if (GameStateManager::GetInstance()->GetGameState() == GameStateManager::InGame && EntityRegistryManager::GetInstance()->GetRegistry()->orphan(playerEntity))
         {
             GameObjectManager::GetInstance()->DestroyAllGameObject();
             SpawnAllObjects(false, playerEntity);
@@ -133,6 +134,7 @@ int main(int argc, char* argv[])
         if (GameStateManager::GetInstance()->GetGameState() == GameStateManager::InGame)
         {
             EnemyMovementManager::GetInstance()->Update();
+            CollisionManager::GetInstance()->Update();
             GameObjectManager::GetInstance()->Update();
         }
     }

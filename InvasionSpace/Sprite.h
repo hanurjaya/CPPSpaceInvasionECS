@@ -4,6 +4,7 @@
 class Sprite
 {
 public:
+	static constexpr auto in_place_delete = true;
 	SDL_Texture* m_texture = nullptr;
 	SDL_FRect* m_texSize = nullptr;
 	Sprite(SDL_Texture* texture, SDL_FRect* texSize);

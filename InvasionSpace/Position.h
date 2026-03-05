@@ -4,6 +4,7 @@
 class Position
 {
 public:
+	static constexpr auto in_place_delete = true;
 	SDL_FRect* m_posDetail = nullptr;
 	Position(SDL_FRect* posDetail);
 	~Position();
