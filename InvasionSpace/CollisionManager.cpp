@@ -71,19 +71,22 @@ void CollisionManager::SetPlayerEntity(entt::entity playerEntity)
 
 void CollisionManager::Update()
 {
-	GameplayInfo& playerInfo = EntityRegistryManager::GetInstance()->GetRegistry()->get<GameplayInfo>(m_playerEntity);
-	Position& playerPos = EntityRegistryManager::GetInstance()->GetRegistry()->get<Position>(m_playerEntity);
+	if (!EntityRegistryManager::GetInstance()->GetRegistry()->orphan(m_playerEntity))
+	{
+		GameplayInfo& playerInfo = EntityRegistryManager::GetInstance()->GetRegistry()->get<GameplayInfo>(m_playerEntity);
+		Position& playerPos = EntityRegistryManager::GetInstance()->GetRegistry()->get<Position>(m_playerEntity);
 
-	//code to check collision
-	EntityRegistryManager::GetInstance()->GetRegistry()->view<Position, GameplayInfo>().each([&](auto entity, Position& pos, GameplayInfo& gameplayInfo) {
-		if (entity != m_playerEntity)
-		{
-			if (playerInfo.m_isActive && gameplayInfo.m_isActive && CheckCollision(playerPos.m_posDetail, pos.m_posDetail))
+		//code to check collision
+		EntityRegistryManager::GetInstance()->GetRegistry()->view<Position, GameplayInfo>().each([&](auto entity, Position& pos, GameplayInfo& gameplayInfo) {
+			if (entity != m_playerEntity)
 			{
-				playerInfo.m_isActive = false;
+				if (playerInfo.m_isActive && gameplayInfo.m_isActive && CheckCollision(playerPos.m_posDetail, pos.m_posDetail))
+				{
+					playerInfo.m_isActive = false;
+				}
 			}
-		}
-		});
+			});
+	}
 
 	for (auto [entity, gameplayInfo] : EntityRegistryManager::GetInstance()->GetRegistry()->view<GameplayInfo>().each())
 	{

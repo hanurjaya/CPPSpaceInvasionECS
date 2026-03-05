@@ -15,6 +15,7 @@ private:
 	entt::entity m_playerEntity;
 	bool m_enemyNeedMoveDown{ false };
 	bool m_isEnemyMoveLeft{ true };
+	int m_totalScore{ 0 };
 
 	EnemyMovementManager();
 	Uint64 GetElapsedTime();

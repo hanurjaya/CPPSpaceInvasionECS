@@ -144,6 +144,8 @@ int main(int argc, char* argv[])
     delete GameObjectManager::GetInstance();
     delete GameStateManager::GetInstance();
     delete RenderingManager::GetInstance();
+    delete CollisionManager::GetInstance();
+    delete EnemyMovementManager::GetInstance();
     delete EntityRegistryManager::GetInstance();
     
     //For Memory Leak Checker
